@@ -1,36 +1,28 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns="http://maven.apache.org/POM/4.0.0"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.springframework.samples</groupId>
-  <artifactId>spring-petclinic</artifactId>
+  <artifactId>hanli-spring-petclinic</artifactId>
   <version>2.1.0.BUILD-SNAPSHOT</version>
-
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>2.1.4.RELEASE</version>
   </parent>
   <name>petclinic</name>
-
   <properties>
-
     <!-- Generic properties -->
     <java.version>1.8</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
     <!-- Web dependencies -->
     <webjars-bootstrap.version>3.3.6</webjars-bootstrap.version>
     <webjars-jquery-ui.version>1.11.4</webjars-jquery-ui.version>
     <webjars-jquery.version>2.2.4</webjars-jquery.version>
     <wro4j.version>1.8.0</wro4j.version>
-
     <jacoco.version>0.8.2</jacoco.version>
-
   </properties>
-
   <dependencies>
     <!-- Spring and Spring Boot dependencies -->
     <dependency>
@@ -58,7 +50,6 @@
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
-
     <!-- Databases - Uses HSQL by default -->
     <dependency>
       <groupId>org.hsqldb</groupId>
@@ -70,7 +61,6 @@
       <artifactId>mysql-connector-java</artifactId>
       <scope>runtime</scope>
     </dependency>
-
     <!-- caching -->
     <dependency>
       <groupId>javax.cache</groupId>
@@ -80,7 +70,6 @@
       <groupId>org.ehcache</groupId>
       <artifactId>ehcache</artifactId>
     </dependency>
-
     <!-- webjars -->
     <dependency>
       <groupId>org.webjars</groupId>
@@ -102,16 +91,95 @@
       <version>${webjars-bootstrap.version}</version>
     </dependency>
     <!-- end of webjars -->
-
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-devtools</artifactId>
       <optional>true</optional>
     </dependency>
   </dependencies>
-
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>com.microsoft.azure</groupId>
+          <artifactId>azure-webapp-maven-plugin</artifactId>
+          <version>1.6.1</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
+
+      <plugin>
+        <groupId>com.microsoft.azure</groupId>
+        <artifactId>azure-spring-maven-plugin</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <configuration>
+          <subscriptionId>b46590cb-a111-4b84-935f-c305aaf1f424</subscriptionId>
+          <resourceGroup>zhyan</resourceGroup>
+          <clusterName>sdfsf</clusterName>
+          <appName>petclinic</appName>
+          <public>true</public>
+          <port>80</port>
+          <javaVersion>8</javaVersion>
+          <deployment>
+            <cpu>1</cpu>
+            <memoryInGB>1</memoryInGB>
+            <instanceCount>1</instanceCount>
+            <jvmParameter>-Xmx256m</jvmParameter>
+            <environment>
+              <foo>bar</foo>
+            </environment>
+            <!-- <volumes>
+              <volume>
+                <path>/var/job-result-data</path>
+                <size>10G</size>
+                <persist>true</persist>
+              </volume>
+              <volume>
+                <path>/var/log/my-app-logs</path>
+                <size>10G</size>
+                <persist>true</persist>
+              </volume>
+            </volumes> -->
+            <resources>
+              <resource>
+                <directory>${project.basedir}/target</directory>
+                <includes>
+                  <include>*.jar</include>
+                </includes>
+              </resource>
+            </resources>
+          </deployment>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>com.microsoft.azure</groupId>
+        <artifactId>azure-webapp-maven-plugin</artifactId>
+        <version>1.5.4</version>
+        <configuration>
+          <schemaVersion>V2</schemaVersion>
+          <resourceGroup>hanli-spring-petclinic-win-rg</resourceGroup>
+          <appName>hanli-spring-petclinic-jetty-verify</appName>
+          <pricingTier>P1v2</pricingTier>
+          <region>westeurope</region>
+          <runtime>
+            <os>windows</os>
+            <javaVersion>1.8</javaVersion>
+            <webContainer>jetty 9.1</webContainer>
+          </runtime>
+          <deployment>
+            <resources>
+              <resource>
+                <directory>${project.basedir}/target</directory>
+                <includes>
+                  <include>*.jar</include>
+                </includes>
+              </resource>
+            </resources>
+          </deployment>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
@@ -152,7 +220,6 @@
           </execution>
         </executions>
       </plugin>
-
       <!-- Spring Boot Actuator displays build-related information if a git.properties
         file is present at the classpath -->
       <plugin>
@@ -169,12 +236,10 @@
           <verbose>true</verbose>
           <dateFormat>yyyy-MM-dd'T'HH:mm:ssZ</dateFormat>
           <generateGitPropertiesFile>true</generateGitPropertiesFile>
-          <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties
-          </generateGitPropertiesFilename>
+          <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
           <failOnNoGitDirectory>false</failOnNoGitDirectory>
         </configuration>
       </plugin>
-
       <plugin>
         <groupId>ro.isdc.wro4j</groupId>
         <artifactId>wro4j-maven-plugin</artifactId>
@@ -209,7 +274,6 @@
       </plugin>
     </plugins>
   </build>
-
   <!-- Apache 2 license -->
   <licenses>
     <license>
@@ -217,7 +281,6 @@
       <url>https://www.apache.org/licenses/LICENSE-2.0</url>
     </license>
   </licenses>
-
   <repositories>
     <repository>
       <id>spring-snapshots</id>
@@ -236,8 +299,12 @@
       </snapshots>
     </repository>
   </repositories>
-
   <pluginRepositories>
+    <!-- <pluginRepository>
+      <id>commicrosoftazure-3184</id>
+      <name>commicrosoftazure-3184</name>
+      <url>https://oss.sonatype.org/content/repositories/commicrosoftazure-3184/</url>
+    </pluginRepository> -->
     <pluginRepository>
       <id>spring-snapshots</id>
       <name>Spring Snapshots</name>
@@ -255,5 +322,4 @@
       </snapshots>
     </pluginRepository>
   </pluginRepositories>
-
 </project>

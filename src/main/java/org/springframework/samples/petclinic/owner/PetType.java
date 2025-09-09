@@ -27,4 +27,14 @@ import jakarta.persistence.Table;
 @Table(name = "types")
 public class PetType extends NamedEntity {
 
+	// Default constructor required for JPA and Hibernate 6.x
+	public PetType() {
+	}
+
+	// Constructor with all fields for Hibernate 6.x DTO projection
+	public PetType(Integer id, String name) {
+		setId(id);
+		setName(name);
+	}
+
 }

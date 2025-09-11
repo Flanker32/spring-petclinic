@@ -59,8 +59,7 @@ class PetController {
 	}
 
 	@ModelAttribute("pet")
-	public Pet findPet(@PathVariable int ownerId,
-			@PathVariable(required = false) Integer petId) {
+	public Pet findPet(@PathVariable int ownerId, @PathVariable(required = false) Integer petId) {
 		return petId == null ? new Pet() : this.owners.findById(ownerId).getPet(petId);
 	}
 
